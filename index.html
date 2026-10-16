@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FF6B35">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="領収書ツール">
+<title>経費・領収書ツール</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  :root {
+    color-scheme: light;
+    --orange: #FF6B35;
+    --orange-pale: #FFF5F0;
+    --ink: #1A1A2E;
+    --ink-mid: #555555;
+    --ink-light: #8A8A8A;
+    --desk: #F2F2F2;
+    --paper: #FFFFFF;
+    --rule: #E8E8E8;
+    --shadow: rgba(26, 26, 46, 0.14);
+    --tooth: 14px;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --orange: #FF7A4A;
+      --orange-pale: #3A2A24;
+      --ink: #F2F2F5;
+      --ink-mid: #C4C4CC;
+      --ink-light: #8E8E98;
+      --desk: #18181D;
+      --paper: #26262E;
+      --rule: #3A3A44;
+      --shadow: rgba(0, 0, 0, 0.5);
+    }
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--desk);
+    color: var(--ink);
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", YuGothic, Meiryo, "Noto Sans JP", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  /* 見出し */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  header img { width: 44px; height: 44px; border-radius: 10px; flex: none; }
+  h1 {
+    margin: 0;
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+  .lead {
+    margin: 0 0 1.75rem;
+    color: var(--ink-mid);
+    font-size: 0.875rem;
+  }
+
+  /* ツール（領収書の紙片） */
+  .slips { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.125rem; }
+  .slip-shadow { filter: drop-shadow(0 2px 3px var(--shadow)); }
+  .slip {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.25rem 1rem;
+    padding: 1.125rem 1.25rem calc(1.125rem + var(--tooth) / 2);
+    background: var(--paper);
+    color: inherit;
+    text-decoration: none;
+    /* 下端をギザギザ（ちぎった領収書）にする */
+    -webkit-mask:
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--tooth) 100%;
+            mask:
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--tooth) 100%;
+    transition: transform 120ms ease;
+  }
+  a.slip:active { transform: translateY(1px); }
+  a.slip:focus-visible { outline: none; }
+  .slip-shadow:has(a.slip:focus-visible) { filter: drop-shadow(0 0 0 var(--orange)) drop-shadow(0 0 2px var(--orange)); }
+  .slip-name {
+    grid-column: 1;
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .slip-desc {
+    grid-column: 1;
+    margin: 0;
+    color: var(--ink-mid);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+  }
+  .slip-tag {
+    grid-column: 1;
+    justify-self: start;
+    margin-top: 0.375rem;
+    padding: 0.0625rem 0.5rem;
+    border-radius: 4px;
+    background: var(--orange-pale);
+    color: var(--orange);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .slip-go {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--orange);
+    color: #FFFFFF;
+  }
+  .slip-go svg { width: 1.25rem; height: 1.25rem; }
+  .slip.is-pending { cursor: default; }
+  .slip.is-pending .slip-name,
+  .slip.is-pending .slip-desc { color: var(--ink-light); }
+  .slip.is-pending .slip-go {
+    width: auto; height: auto;
+    padding: 0.25rem 0.625rem;
+    border-radius: 4px;
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-light);
+    font-size: 0.75rem;
+  }
+
+  /* 案内・インストール */
+  .note {
+    margin: 2rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--rule);
+    color: var(--ink-mid);
+    font-size: 0.8125rem;
+  }
+  .note p { margin: 0 0 0.5rem; }
+  .install {
+    margin-top: 1rem;
+    display: none;
+  }
+  .install.is-shown { display: block; }
+  .install button {
+    appearance: none;
+    border: 1.5px solid var(--orange);
+    background: transparent;
+    color: var(--orange);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0.625rem 1.125rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .install button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  .install p { margin: 0; color: var(--ink-mid); font-size: 0.8125rem; }
+  .empty { color: var(--ink-mid); font-size: 0.875rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slip { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="icons/icon-192.png" alt="">
+    <h1>経費・領収書ツール</h1>
+  </header>
+  <p class="lead">使うツールを選んでください。</p>
+
+  <ul class="slips" id="slips"></ul>
+
+  <div class="note">
+    <p>ツールはブラウザの新しい画面で開きます。ログインを求められたら、会社のGoogleアカウント（<span style="white-space:nowrap">@thomas-gr.com</span>）を選んでください。</p>
+    <div class="install" id="install-chrome">
+      <button type="button" id="install-btn">このアプリをインストール</button>
+    </div>
+    <div class="install" id="install-ios">
+      <p>iPhone・iPadでは、Safariの共有ボタンから「ホーム画面に追加」を選ぶと、アイコンから開けるようになります。</p>
+    </div>
+  </div>
+</div>
+
+<script src="apps.js"></script>
+<script>
+(function () {
+  var list = document.getElementById("slips");
+  var apps = Array.isArray(window.OCR_APPS) ? window.OCR_APPS : [];
+
+  var arrow =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M7 17L17 7"/><path d="M9 7h8v8"/></svg>';
+
+  if (apps.length === 0) {
+    var li = document.createElement("li");
+    li.className = "empty";
+    li.textContent = "表示するツールがありません。apps.js にツールを追加してください。";
+    list.appendChild(li);
+  }
+
+  apps.forEach(function (app) {
+    var li = document.createElement("li");
+    li.className = "slip-shadow";
+    var ready = typeof app.url === "string" && /^https:\/\//.test(app.url);
+
+    var el = document.createElement(ready ? "a" : "div");
+    el.className = "slip" + (ready ? "" : " is-pending");
+    if (ready) {
+      el.href = app.url;
+      el.target = "_blank";
+      el.rel = "noopener";
+      el.setAttribute("aria-label", app.name + "を開く");
+    } else {
+      el.setAttribute("aria-disabled", "true");
+    }
+
+    var name = document.createElement("p");
+    name.className = "slip-name";
+    name.textContent = app.name || "";
+    el.appendChild(name);
+
+    if (app.description) {
+      var desc = document.createElement("p");
+      desc.className = "slip-desc";
+      desc.textContent = app.description;
+      el.appendChild(desc);
+    }
+
+    if (app.audience) {
+      var tag = document.createElement("span");
+      tag.className = "slip-tag";
+      tag.textContent = app.audience;
+      el.appendChild(tag);
+    }
+
+    var go = document.createElement("span");
+    go.className = "slip-go";
+    if (ready) { go.innerHTML = arrow; } else { go.textContent = "準備中"; }
+    el.appendChild(go);
+
+    li.appendChild(el);
+    list.appendChild(li);
+  });
+
+  // インストール案内
+  var standalone =
+    window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  if (!standalone && isIOS) {
+    document.getElementById("install-ios").classList.add("is-shown");
+  }
+
+  var deferred = null;
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferred = e;
+    document.getElementById("install-chrome").classList.add("is-shown");
+  });
+  document.getElementById("install-btn").addEventListener("click", function () {
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.finally(function () {
+      deferred = null;
+      document.getElementById("install-chrome").classList.remove("is-shown");
+    });
+  });
+  window.addEventListener("appinstalled", function () {
+    document.getElementById("install-chrome").classList.remove("is-shown");
+  });
+
+  // オフライン対応
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+})();
+</script>
+</body>
+</html>
