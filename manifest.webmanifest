@@ -1,7 +1,7 @@
 {
-  "name": "経費・領収書ツール",
-  "short_name": "領収書ツール",
-  "description": "thomas社内の領収書読み取りツールをまとめて開くランチャー",
+  "name": "社内読み取りツール",
+  "short_name": "読み取りツール",
+  "description": "thomas社内の読み取りツール（経理・資産管理・植物管理など）をまとめて開くランチャー",
   "lang": "ja",
   "start_url": "./",
   "scope": "./",
@@ -9,8 +9,21 @@
   "background_color": "#FFFFFF",
   "theme_color": "#FF6B35",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

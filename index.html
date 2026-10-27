@@ -7,8 +7,8 @@
 <meta name="theme-color" content="#FF6B35">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="領収書ツール">
-<title>経費・領収書ツール</title>
+<meta name="apple-mobile-web-app-title" content="読み取りツール">
+<title>社内読み取りツール</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -20,11 +20,9 @@
     --ink: #1A1A2E;
     --ink-mid: #555555;
     --ink-light: #8A8A8A;
-    --desk: #F2F2F2;
+    --desk: #F5F5F5;
     --paper: #FFFFFF;
     --rule: #E8E8E8;
-    --shadow: rgba(26, 26, 46, 0.14);
-    --tooth: 14px;
     box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -38,16 +36,13 @@
       --ink-mid: #C4C4CC;
       --ink-light: #8E8E98;
       --desk: #18181D;
-      --paper: #26262E;
+      --paper: #24242B;
       --rule: #3A3A44;
-      --shadow: rgba(0, 0, 0, 0.5);
     }
   }
   *, *::before, *::after { box-sizing: inherit; }
-  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   body {
     margin: 0;
-    min-height: 100%;
     background: var(--desk);
     color: var(--ink);
     font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", YuGothic, Meiryo, "Noto Sans JP", sans-serif;
@@ -55,152 +50,98 @@
     line-height: 1.6;
     -webkit-text-size-adjust: 100%;
   }
-  .wrap {
-    max-width: 34rem;
-    margin: 0 auto;
-    padding: 2rem 1.25rem 3rem;
-  }
+  .wrap { max-width: 36rem; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
 
-  /* 見出し */
-  header {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    margin-bottom: 0.5rem;
-  }
+  header { display: flex; align-items: center; gap: 0.875rem; margin-bottom: 0.5rem; }
   header img { width: 44px; height: 44px; border-radius: 10px; flex: none; }
-  h1 {
-    margin: 0;
-    font-size: 1.375rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    line-height: 1.3;
-  }
-  .lead {
-    margin: 0 0 1.75rem;
-    color: var(--ink-mid);
-    font-size: 0.875rem;
-  }
+  h1 { margin: 0; font-size: 1.375rem; font-weight: 700; letter-spacing: 0.02em; line-height: 1.3; }
+  .lead { margin: 0 0 1.5rem; color: var(--ink-mid); font-size: 0.875rem; }
 
-  /* ツール（領収書の紙片） */
-  .slips { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.125rem; }
-  .slip-shadow { filter: drop-shadow(0 2px 3px var(--shadow)); }
-  .slip {
+  /* 分類 */
+  section + section { margin-top: 1.75rem; }
+  h2 {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em;
+    color: var(--ink-mid);
+  }
+  h2::before { content: ""; width: 4px; height: 1em; border-radius: 2px; background: var(--orange); }
+  h2 .count { font-weight: 400; color: var(--ink-light); letter-spacing: 0; }
+
+  /* ツール */
+  .tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+  .tool {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 0.25rem 1rem;
-    padding: 1.125rem 1.25rem calc(1.125rem + var(--tooth) / 2);
+    gap: 0 0.875rem;
+    height: 100%;
+    padding: 1rem;
     background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
     color: inherit;
     text-decoration: none;
-    /* 下端をギザギザ（ちぎった領収書）にする */
-    -webkit-mask:
-      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--tooth) 100%;
-            mask:
-      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--tooth) 100%;
-    transition: transform 120ms ease;
+    transition: border-color 120ms ease, transform 120ms ease;
   }
-  a.slip:active { transform: translateY(1px); }
-  a.slip:focus-visible { outline: none; }
-  .slip-shadow:has(a.slip:focus-visible) { filter: drop-shadow(0 0 0 var(--orange)) drop-shadow(0 0 2px var(--orange)); }
-  .slip-name {
-    grid-column: 1;
-    margin: 0;
-    font-size: 1.0625rem;
-    font-weight: 700;
-    line-height: 1.4;
-  }
-  .slip-desc {
-    grid-column: 1;
-    margin: 0;
-    color: var(--ink-mid);
-    font-size: 0.8125rem;
-    line-height: 1.55;
-  }
-  .slip-tag {
-    grid-column: 1;
-    justify-self: start;
-    margin-top: 0.375rem;
-    padding: 0.0625rem 0.5rem;
-    border-radius: 4px;
+  a.tool:hover { border-color: var(--orange); }
+  a.tool:active { transform: translateY(1px); }
+  a.tool:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  .tool-icon {
+    display: grid; place-items: center;
+    width: 2.75rem; height: 2.75rem;
+    border-radius: 10px;
     background: var(--orange-pale);
     color: var(--orange);
-    font-size: 0.75rem;
-    font-weight: 700;
   }
-  .slip-go {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 50%;
-    background: var(--orange);
-    color: #FFFFFF;
+  .tool-icon svg { width: 1.5rem; height: 1.5rem; }
+  .tool-body { min-width: 0; }
+  .tool-name { margin: 0; font-size: 1rem; font-weight: 700; line-height: 1.4; }
+  .tool-desc { margin: 0.125rem 0 0; color: var(--ink-mid); font-size: 0.8125rem; line-height: 1.55; }
+  .tool-tag {
+    display: inline-block; margin-top: 0.375rem;
+    padding: 0 0.5rem; border-radius: 4px;
+    background: var(--orange-pale); color: var(--orange);
+    font-size: 0.75rem; font-weight: 700;
   }
-  .slip-go svg { width: 1.25rem; height: 1.25rem; }
-  .slip.is-pending { cursor: default; }
-  .slip.is-pending .slip-name,
-  .slip.is-pending .slip-desc { color: var(--ink-light); }
-  .slip.is-pending .slip-go {
-    width: auto; height: auto;
-    padding: 0.25rem 0.625rem;
-    border-radius: 4px;
-    background: transparent;
-    border: 1px solid var(--rule);
-    color: var(--ink-light);
-    font-size: 0.75rem;
+  .tool-go { color: var(--orange); }
+  .tool-go svg { width: 1.25rem; height: 1.25rem; display: block; }
+  .tool.is-pending { cursor: default; }
+  .tool.is-pending .tool-name, .tool.is-pending .tool-desc { color: var(--ink-light); }
+  .tool.is-pending .tool-icon { background: transparent; border: 1px dashed var(--rule); color: var(--ink-light); }
+  .tool.is-pending .tool-go {
+    padding: 0.125rem 0.5rem; border: 1px solid var(--rule); border-radius: 4px;
+    color: var(--ink-light); font-size: 0.75rem; white-space: nowrap;
   }
 
-  /* 案内・インストール */
-  .note {
-    margin: 2rem 0 0;
-    padding-top: 1.25rem;
-    border-top: 1px dashed var(--rule);
-    color: var(--ink-mid);
-    font-size: 0.8125rem;
-  }
+  .note { margin: 2rem 0 0; padding-top: 1.25rem; border-top: 1px dashed var(--rule); color: var(--ink-mid); font-size: 0.8125rem; }
   .note p { margin: 0 0 0.5rem; }
-  .install {
-    margin-top: 1rem;
-    display: none;
-  }
+  .nowrap { white-space: nowrap; }
+  .install { margin-top: 1rem; display: none; }
   .install.is-shown { display: block; }
   .install button {
-    appearance: none;
-    border: 1.5px solid var(--orange);
-    background: transparent;
-    color: var(--orange);
-    font: inherit;
-    font-size: 0.875rem;
-    font-weight: 700;
-    padding: 0.625rem 1.125rem;
-    border-radius: 8px;
-    cursor: pointer;
+    appearance: none; border: 1.5px solid var(--orange); background: transparent; color: var(--orange);
+    font: inherit; font-size: 0.875rem; font-weight: 700;
+    padding: 0.625rem 1.125rem; border-radius: 8px; cursor: pointer;
   }
   .install button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
-  .install p { margin: 0; color: var(--ink-mid); font-size: 0.8125rem; }
+  .install p { margin: 0; }
   .empty { color: var(--ink-mid); font-size: 0.875rem; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .slip { transition: none; }
-  }
+  @media (prefers-reduced-motion: reduce) { .tool { transition: none; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <img src="icons/icon-192.png" alt="">
-    <h1>経費・領収書ツール</h1>
+    <h1>社内読み取りツール</h1>
   </header>
   <p class="lead">使うツールを選んでください。</p>
 
-  <ul class="slips" id="slips"></ul>
+  <div id="list"></div>
 
   <div class="note">
-    <p>ツールはブラウザの新しい画面で開きます。ログインを求められたら、会社のGoogleアカウント（<span style="white-space:nowrap">@thomas-gr.com</span>）を選んでください。</p>
+    <p>ツールはブラウザの新しい画面で開きます。ログインを求められたら、会社のGoogleアカウント（<span class="nowrap">@thomas-gr.com</span>）を選んでください。</p>
     <div class="install" id="install-chrome">
       <button type="button" id="install-btn">このアプリをインストール</button>
     </div>
@@ -213,73 +154,105 @@
 <script src="apps.js"></script>
 <script>
 (function () {
-  var list = document.getElementById("slips");
+  var ICONS = {
+    receipt: '<path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+    card: '<rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/>',
+    tag: '<path d="M3 12V4.5A1.5 1.5 0 0 1 4.5 3H12l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/>',
+    leaf: '<path d="M5 19c0-8 5-14 15-15-1 10-7 15-15 15z"/><path d="M5 19l8-8"/>',
+    sheet: '<rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M3.5 14.75h17M9.5 9.5V20"/>',
+    doc: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'
+  };
+  function svg(inner, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.8) +
+      '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+  }
+  var ARROW = svg('<path d="M7 17L17 7"/><path d="M9 7h8v8"/>', 2.4);
+
+  var root = document.getElementById("list");
   var apps = Array.isArray(window.OCR_APPS) ? window.OCR_APPS : [];
 
-  var arrow =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-    '<path d="M7 17L17 7"/><path d="M9 7h8v8"/></svg>';
-
   if (apps.length === 0) {
-    var li = document.createElement("li");
-    li.className = "empty";
-    li.textContent = "表示するツールがありません。apps.js にツールを追加してください。";
-    list.appendChild(li);
+    var p = document.createElement("p");
+    p.className = "empty";
+    p.textContent = "表示するツールがありません。apps.js にツールを追加してください。";
+    root.appendChild(p);
   }
 
+  // 分類ごとにまとめる（最初に出てきた順）
+  var order = [], groups = {};
   apps.forEach(function (app) {
-    var li = document.createElement("li");
-    li.className = "slip-shadow";
-    var ready = typeof app.url === "string" && /^https:\/\//.test(app.url);
+    var c = app.category || "その他";
+    if (!groups[c]) { groups[c] = []; order.push(c); }
+    groups[c].push(app);
+  });
 
-    var el = document.createElement(ready ? "a" : "div");
-    el.className = "slip" + (ready ? "" : " is-pending");
-    if (ready) {
-      el.href = app.url;
-      el.target = "_blank";
-      el.rel = "noopener";
-      el.setAttribute("aria-label", app.name + "を開く");
-    } else {
-      el.setAttribute("aria-disabled", "true");
-    }
+  order.forEach(function (c) {
+    var sec = document.createElement("section");
+    var h = document.createElement("h2");
+    h.textContent = c;
+    var n = document.createElement("span");
+    n.className = "count";
+    n.textContent = groups[c].length + "件";
+    h.appendChild(n);
+    sec.appendChild(h);
 
-    var name = document.createElement("p");
-    name.className = "slip-name";
-    name.textContent = app.name || "";
-    el.appendChild(name);
+    var ul = document.createElement("ul");
+    ul.className = "tools";
+    groups[c].forEach(function (app) {
+      var li = document.createElement("li");
+      var ready = typeof app.url === "string" && /^https:\/\//.test(app.url);
+      var el = document.createElement(ready ? "a" : "div");
+      el.className = "tool" + (ready ? "" : " is-pending");
+      if (ready) {
+        el.href = app.url;
+        el.target = "_blank";
+        el.rel = "noopener";
+        el.setAttribute("aria-label", (app.name || "") + "を開く");
+      } else {
+        el.setAttribute("aria-disabled", "true");
+      }
 
-    if (app.description) {
-      var desc = document.createElement("p");
-      desc.className = "slip-desc";
-      desc.textContent = app.description;
-      el.appendChild(desc);
-    }
+      var ic = document.createElement("span");
+      ic.className = "tool-icon";
+      ic.innerHTML = svg(ICONS[app.icon] || ICONS.doc);
+      el.appendChild(ic);
 
-    if (app.audience) {
-      var tag = document.createElement("span");
-      tag.className = "slip-tag";
-      tag.textContent = app.audience;
-      el.appendChild(tag);
-    }
+      var body = document.createElement("span");
+      body.className = "tool-body";
+      var name = document.createElement("p");
+      name.className = "tool-name";
+      name.textContent = app.name || "";
+      body.appendChild(name);
+      if (app.description) {
+        var d = document.createElement("p");
+        d.className = "tool-desc";
+        d.textContent = app.description;
+        body.appendChild(d);
+      }
+      if (app.audience) {
+        var t = document.createElement("span");
+        t.className = "tool-tag";
+        t.textContent = app.audience;
+        body.appendChild(t);
+      }
+      el.appendChild(body);
 
-    var go = document.createElement("span");
-    go.className = "slip-go";
-    if (ready) { go.innerHTML = arrow; } else { go.textContent = "準備中"; }
-    el.appendChild(go);
+      var go = document.createElement("span");
+      go.className = "tool-go";
+      if (ready) { go.innerHTML = ARROW; } else { go.textContent = "準備中"; }
+      el.appendChild(go);
 
-    li.appendChild(el);
-    list.appendChild(li);
+      li.appendChild(el);
+      ul.appendChild(li);
+    });
+    sec.appendChild(ul);
+    root.appendChild(sec);
   });
 
   // インストール案内
-  var standalone =
-    window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
-  if (!standalone && isIOS) {
-    document.getElementById("install-ios").classList.add("is-shown");
-  }
+  var standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (!standalone && isIOS) document.getElementById("install-ios").classList.add("is-shown");
 
   var deferred = null;
   window.addEventListener("beforeinstallprompt", function (e) {
@@ -299,7 +272,6 @@
     document.getElementById("install-chrome").classList.remove("is-shown");
   });
 
-  // オフライン対応
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
       navigator.serviceWorker.register("sw.js").catch(function () {});

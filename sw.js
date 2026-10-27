@@ -5,7 +5,7 @@
  * 下の CACHE_VERSION の数字を 1 つ上げてください（古い画面が残るのを防ぎます）。
  * apps.js は毎回ネットから取りに行くので、URL変更だけなら上げなくても反映されます。
  */
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const CACHE_NAME = "ocr-launcher-" + CACHE_VERSION;
 
 const SHELL = [
