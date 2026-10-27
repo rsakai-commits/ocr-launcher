@@ -8,7 +8,7 @@
  * 画面本体（index.html）とツール一覧（apps.js）は、ブラウザが覚えている分を使わず、
  * 開くたびにサーバーへ最新かを確かめます。つながらないときだけ、保存分を使います。
  */
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v5";
 const CACHE_NAME = "ocr-launcher-" + CACHE_VERSION;
 
 const SHELL = [
