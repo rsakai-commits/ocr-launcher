@@ -78,12 +78,12 @@ powershell -ExecutionPolicy Bypass -File "$HOME\Documents\ocr-launcher\publish.p
 | 項目 | 内容 |
 |---|---|
 | `category` | 分類の見出し。同じ文字のツールは同じ見出しの下にまとまります（例：`経理`・`資産管理`・`植物管理`） |
-| `icon` | アイコン。`receipt`（領収書）・`card`（カード）・`tag`（ラベル）・`leaf`（植物）・`sheet`（表）・`doc`（書類）から選びます |
+| `icon` | アイコン。`receipt`（領収書）・`card`（カード）・`tag`（ラベル）・`leaf`（植物）・`sheet`（表）・`box`（箱）・`doc`（書類）から選びます |
 | `name` / `description` | 名前と1行の説明 |
 | `audience` | 対象者の表示（例：`経理担当者向け`）。不要なら空 `""` |
 | `url` | ツールは `/exec` で終わるウェブアプリ URL、シートなどはそのページの URL。空 `""` なら「準備中」 |
 
-分類ごとの色（見出しの線・アイコン・ラベル・矢印）は、`apps.js` の上のほうにある `OCR_CATEGORY_COLORS` で指定します。使える色は `orange`（オレンジ）・`sky`（水色）・`green`（緑）・`purple`（紫）・`gray`（灰色）です。書いていない分類はオレンジになります。
+分類ごとの色（見出しの線・アイコン・ラベル・矢印）は、`apps.js` の上のほうにある `OCR_CATEGORY_COLORS` で指定します。使える色は `orange`（オレンジ）・`sky`（水色）・`green`（緑）・`yellow`（黄色）・`purple`（紫）・`gray`（灰色）です。書いていない分類はオレンジになります。
 
 セットアップ（`ocr-launcher-setup.ps1`）を新しい版で実行し直した場合も、入力済みの URL や手直しした説明文はそのまま残ります。新しい版で増えた項目は、追加してよいかを確認してから加えます。
 

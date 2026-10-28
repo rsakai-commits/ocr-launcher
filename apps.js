@@ -6,7 +6,7 @@
  * （見出しの順番は、そのカテゴリが最初に出てきた順です）。
  *
  *   category    : 分類の見出し（例: 経理）
- *   icon        : アイコン（receipt / card / tag / leaf / sheet / doc から選ぶ）
+ *   icon        : アイコン（receipt / card / tag / leaf / sheet / box / doc から選ぶ）
  *   name        : 画面に出る名前
  *   description : 1行の説明（何ができるか）
  *   audience    : 対象者の表示（空文字なら表示しない）
@@ -22,13 +22,14 @@
 
 /*
  * 分類ごとの色（見出しの線・アイコン・ラベル・矢印の色）
- *   使える色: orange（オレンジ） / sky（水色） / green（緑） / purple（紫） / gray（灰色）
+ *   使える色: orange（オレンジ） / sky（水色） / green（緑） / yellow（黄色） / purple（紫） / gray（灰色）
  *   ここに書いていない分類は、オレンジになります。
  */
 window.OCR_CATEGORY_COLORS = {
   "経理": "orange",
   "資産管理": "sky",
-  "植物管理": "green"
+  "植物管理": "green",
+  "備品管理": "yellow"
 };
 
 window.OCR_APPS = [
@@ -71,5 +72,13 @@ window.OCR_APPS = [
     description: "205の植物の管理台帳（Googleスプレッドシート）を開きます",
     audience: "",
     url: "https://docs.google.com/spreadsheets/d/12WcUrpI5ovu9sh2BEoOo5qzFI2cI37OUQTNjSZ2QDrc/edit?gid=574295321#gid=574295321"
+  },
+  {
+    category: "備品管理",
+    icon: "box",
+    name: "備品・消耗品 在庫管理",
+    description: "使った分を登録し、在庫が減ったら発注リストに追加します",
+    audience: "",
+    url: "https://script.google.com/a/macros/thomas-gr.com/s/AKfycbwT6_QgO2nKjR5WSdp6-MdxZkh5VY6CA5WYy7YSvNFL6cucdB5SIkVz_f9N9Ym7D13e/exec"
   }
 ];
