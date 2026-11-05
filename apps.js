@@ -44,10 +44,10 @@ window.OCR_APPS = [
   {
     category: "経理",
     icon: "card",
-    name: "法人カード明細と領収書の突合",
-    description: "読み取った領収書とカード明細を照合し、一致・不一致を確認します",
+    name: "法人カード 領収書読み取り",
+    description: "法人カードの領収書を読み取って記録し、カード明細と照合します",
     audience: "",
-    url: ""
+    url: "https://script.google.com/a/macros/thomas-gr.com/s/AKfycbwBdkI_wkjcysB_ebhcOa1a14HO85IqfU27vvsJ3ZD2_DgRNmHQAmJbt6x53qufwCzB/exec"
   },
   {
     category: "資産管理",
