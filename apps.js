@@ -45,7 +45,7 @@ window.OCR_APPS = [
   {
     category: "経理",
     icon: "card",
-    name: "法人カード 領収書読み取り",
+    name: "AMEX領収書読み取り",
     description: "法人カードの領収書を読み取って記録し、カード明細と照合します",
     audience: "経理担当者向け",
     url: "https://script.google.com/a/macros/thomas-gr.com/s/AKfycbwBdkI_wkjcysB_ebhcOa1a14HO85IqfU27vvsJ3ZD2_DgRNmHQAmJbt6x53qufwCzB/exec"

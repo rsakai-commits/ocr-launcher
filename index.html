@@ -215,6 +215,24 @@
   }
   var ARROW = svg('<path d="M7 17L17 7"/><path d="M9 7h8v8"/>', 2.4);
 
+  // 名前を表示する。英数字と日本語の境目に「ここで改行してよい」印（<wbr>）を入れる
+  // （狭い画面で「AMEX／領収書読み取り」のように切れ目のよい位置で折り返すため。見た目の文字は変わらない）
+  function appendName(el, text) {
+    var buf = "", prev = null;
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      var kind = /\s/.test(ch) ? "space" : (/[A-Za-z0-9]/.test(ch) ? "ascii" : "other");
+      if (prev && kind !== prev && kind !== "space" && prev !== "space") {
+        el.appendChild(document.createTextNode(buf));
+        el.appendChild(document.createElement("wbr"));
+        buf = "";
+      }
+      buf += ch;
+      prev = kind;
+    }
+    if (buf) el.appendChild(document.createTextNode(buf));
+  }
+
   var root = document.getElementById("list");
   var apps = Array.isArray(window.OCR_APPS) ? window.OCR_APPS : [];
   var COLORS = (window.OCR_CATEGORY_COLORS && typeof window.OCR_CATEGORY_COLORS === "object") ? window.OCR_CATEGORY_COLORS : {};
@@ -271,7 +289,7 @@
       body.className = "tool-body";
       var name = document.createElement("p");
       name.className = "tool-name";
-      name.textContent = app.name || "";
+      appendName(name, app.name || "");
       body.appendChild(name);
       if (app.description) {
         var d = document.createElement("p");
