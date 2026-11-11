@@ -50,7 +50,7 @@
     line-height: 1.6;
     -webkit-text-size-adjust: 100%;
   }
-  .wrap { max-width: 36rem; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+  .wrap { max-width: 72rem; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
 
   header { display: flex; align-items: center; gap: 0.875rem; margin-bottom: 0.5rem; }
   header img { width: 44px; height: 44px; border-radius: 10px; flex: none; }
@@ -74,7 +74,13 @@
   }
 
   /* 分類 */
-  section + section { margin-top: 1.75rem; }
+  /* 分類を画面の幅に合わせて横に並べる（スマホは1列、タブレットは2列、PCは最大3列） */
+  #list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+    gap: 1.75rem 1.25rem;
+    align-items: start;
+  }
   h2 {
     display: flex; align-items: center; gap: 0.5rem;
     margin: 0 0 0.75rem;

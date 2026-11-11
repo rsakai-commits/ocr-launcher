@@ -29,7 +29,8 @@ window.OCR_CATEGORY_COLORS = {
   "経理": "orange",
   "資産管理": "sky",
   "植物管理": "green",
-  "備品管理": "yellow"
+  "備品管理": "yellow",
+  "展示会": "purple"
 };
 
 window.OCR_APPS = [
@@ -80,5 +81,13 @@ window.OCR_APPS = [
     description: "使った分を登録し、在庫が減ったら発注リストに追加します",
     audience: "",
     url: "https://script.google.com/a/macros/thomas-gr.com/s/AKfycbwT6_QgO2nKjR5WSdp6-MdxZkh5VY6CA5WYy7YSvNFL6cucdB5SIkVz_f9N9Ym7D13e/exec"
+  },
+  {
+    category: "展示会",
+    icon: "sheet",
+    name: "展示会備品一覧",
+    description: "展示会で使う備品の一覧（Googleスプレッドシート）を開きます",
+    audience: "",
+    url: "https://docs.google.com/spreadsheets/d/147TvsJCJNMoxJIXBn4lWdWX4wZqxleeMEkmIEhenvxM/edit?gid=592535475#gid=592535475"
   }
 ];
